@@ -1,0 +1,49 @@
+<script>
+        function sendInput() {
+            var inputText = document.getElementById('input-text').value;
+
+            // Create a query string to send via POST
+            var formData = new URLSearchParams();
+            formData.append('text', inputText);
+
+            fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString(),
+            })
+                .then(response => response.text())  // Get response text directly
+                .then(data => {
+                    console.log('Response data:', data); // Log the response data
+
+                    // Create a new div to store the response and the user input
+                    var outputBox = document.getElementById('output-box');
+
+                    // Create a new message container
+                    var messageContainer = document.createElement('div');
+                    messageContainer.innerHTML = `<p><strong>You:</strong> ${inputText}</p><p><strong>LexBot:</strong> ${data}</p><br>`;
+
+                    // Append the new message container to the output box
+                    outputBox.appendChild(messageContainer);
+
+                    // Scroll to the bottom of the output box after adding new content
+                    outputBox.scrollTop = outputBox.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Log any errors
+                });
+
+            // Clear the input field after sending
+            document.getElementById('input-text').value = '';
+        }
+
+        var textBox = document.getElementById("input-text");
+        var button = document.querySelector(".send-btn");
+
+        textBox.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) { // Check if the Enter key was pressed
+                button.click(); // Trigger the button's click event
+            }
+        });
+    </script>
